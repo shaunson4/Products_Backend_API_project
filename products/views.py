@@ -10,11 +10,24 @@ def products_list(request):
         products = Products.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
-        
+
     elif request.method == 'POST':
         serializer = CarSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def products_detail(request, pk):
+    try:
+        products = Products.objects.get(pk=pk)
+        serializer = ProductSerializer(products)
+        return Response(serializer.data)
+    except Products.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+
+   
           
 
